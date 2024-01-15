@@ -1,6 +1,5 @@
 package org.springboardLogin.Controllers;
 
-
 import org.springboardLogin.DTOs.UserDTO;
 import org.springboardLogin.Entities.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +32,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // Register a new user
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody AppUser user) {
         userService.registerUser(user);
         return ResponseEntity.ok("User registered successfully");
     }
 
+    // Authenticate and generate JWT token for login
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody AppUser user) {
         try {
@@ -56,23 +57,25 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
+
+    // Get all users
     @GetMapping("/users")
-    public ResponseEntity<?> getUsers() {
+    public ResponseEntity<List<AppUser>> getUsers() {
         List<AppUser> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
+    // Get a user by ID
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
         AppUser user = userService.getUserFromId(id);
         if (user != null) {
+            // Convert AppUser to UserDTO
             UserDTO userDTO = new UserDTO(user.getId(), user.getUsername());
             return ResponseEntity.ok(userDTO);
         } else {
+            // User with the given ID not found
             return ResponseEntity.notFound().build();
         }
     }
-
-
-
 }

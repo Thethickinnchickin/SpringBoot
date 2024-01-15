@@ -1,17 +1,16 @@
 package org.springboardLogin.Controllers;
 
-
 import org.springboardLogin.DTOs.TaskDTO;
 import org.springboardLogin.Entities.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import org.springboardLogin.Services.TaskService;
 
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tasks")
@@ -20,13 +19,14 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    // Retrieve all tasks and convert them to TaskDTOs
     @GetMapping
     public ResponseEntity<List<TaskDTO>> getAllTasks() {
         List<Task> tasks = taskService.getAllTasks();
         List<TaskDTO> taskDTOs = new ArrayList<>();
 
         for (Task task : tasks) {
-            System.out.print("ID:  --> " + task.getId());
+            // Convert each Task to TaskDTO
             TaskDTO taskDTO = new TaskDTO(
                     task.getTitle(),
                     task.getDescription(),
@@ -39,15 +39,17 @@ public class TaskController {
         return ResponseEntity.ok(taskDTOs);
     }
 
-
+    // Retrieve a specific task by ID
     @GetMapping("/{id}")
     public Task getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id).orElse(null);
     }
 
+    // Create a new task
     @PostMapping
     public ResponseEntity<?> createTask(@RequestBody Task task) {
         try {
+            // Try creating the task
             taskService.createTask(task);
             return ResponseEntity.ok("Task Created");
         } catch (Exception e) {
@@ -56,10 +58,10 @@ public class TaskController {
         }
     }
 
-
+    // Update an existing task
     @PutMapping("/{id}")
     public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
-        // Fetch the existing task by id
+        // Fetch the existing task by ID
         Optional<Task> existingTaskOptional = taskService.getTaskById(id);
 
         if (existingTaskOptional.isPresent()) {
@@ -84,15 +86,15 @@ public class TaskController {
 
             return ResponseEntity.ok(updatedTaskDTO);
         } else {
-            // Task with the given id not found
+            // Task with the given ID not found
             return ResponseEntity.notFound().build();
         }
     }
 
-
+    // Delete a task by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
-        return ResponseEntity.ok("Deleted Thing");
+        return ResponseEntity.ok("Task Deleted");
     }
 }

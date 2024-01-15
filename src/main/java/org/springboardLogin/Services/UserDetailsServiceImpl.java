@@ -1,7 +1,5 @@
 package org.springboardLogin.Services;
 
-
-
 import org.springboardLogin.Entities.AppUser;
 import org.springboardLogin.Entities.UserDetailsEntity;
 import org.springboardLogin.Repositories.UserRepository;
@@ -24,10 +22,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    // Load user details by username for authentication
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Retrieve user from the repository by username
         Optional<AppUser> userOptional = userRepository.findByUsername(username);
 
+        // Throw an exception if the user is not found
         AppUser user = userOptional.orElseThrow(() ->
                 new UsernameNotFoundException("User not found with username: " + username));
 
@@ -47,4 +48,3 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userDetails;
     }
 }
-

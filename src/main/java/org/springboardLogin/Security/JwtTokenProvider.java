@@ -28,11 +28,12 @@ public class JwtTokenProvider {
 
     private Key jwtSecretKey;
 
+    // Constructor to initialize the JwtTokenProvider with the provided JWT secret
     public JwtTokenProvider(@Value("${app.jwtSecret}") String jwtSecret) {
         this.jwtSecretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-
+    // Generate a JWT token for the given UserDetails
     public String generateToken(UserDetails userDetails) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
@@ -44,6 +45,8 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
+
+    // Extract username from the JWT token
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
@@ -53,6 +56,7 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
+    // Validate the JWT token
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
@@ -71,12 +75,14 @@ public class JwtTokenProvider {
         return false;
     }
 
+    // Get Authentication object for the user based on the JWT token
     public Authentication getAuthentication(String token) {
         String username = getUsernameFromToken(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
+    // Extract JWT token from the request headers
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
