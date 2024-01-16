@@ -1,21 +1,21 @@
 package org.springboardLogin.Entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-@Entity
+import java.util.*;
+
+@Document(collection = "users")
 public class AppUser implements UserDetails {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String username;
 
@@ -24,16 +24,10 @@ public class AppUser implements UserDetails {
     private String password;
 
     // Many-to-many relationship with roles
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    private Set<UserRole> roles = new HashSet<>();
 
     // One-to-many relationship with tasks
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @DBRef
     private List<Task> tasks;
 
     // Constructors
@@ -52,7 +46,7 @@ public class AppUser implements UserDetails {
      * Get the user ID.
      * @return The user ID.
      */
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -60,7 +54,7 @@ public class AppUser implements UserDetails {
      * Set the user ID.
      * @param id The user ID to set.
      */
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -139,6 +133,14 @@ public class AppUser implements UserDetails {
         this.tasks = tasks;
     }
 
+    public void addTask(Task task) {
+        if (this.tasks == null) {
+            this.tasks = new ArrayList<>();
+        }
+        this.tasks.add(task);
+    }
+
+
     // Equals and HashCode (based on unique field)
 
     @Override
@@ -158,7 +160,7 @@ public class AppUser implements UserDetails {
      * Get the set of roles associated with the user.
      * @return The set of roles.
      */
-    public Set<Role> getRoles() {
+    public Set<UserRole> getRoles() {
         return roles;
     }
 
@@ -166,7 +168,7 @@ public class AppUser implements UserDetails {
      * Set the set of roles associated with the user.
      * @param roles The set of roles to set.
      */
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
     }
 }

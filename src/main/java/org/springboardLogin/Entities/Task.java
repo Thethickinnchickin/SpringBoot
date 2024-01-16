@@ -1,22 +1,23 @@
 package org.springboardLogin.Entities;
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+
 import java.util.Date;
 
-@Entity
+@Document(collection = "tasks")
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String title;
     private String description;
     private Date dueDate;
     private String priority;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+
     private AppUser user;
 
     // Constructors
@@ -48,7 +49,7 @@ public class Task {
      * Get the ID of the task.
      * @return The ID.
      */
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -56,7 +57,7 @@ public class Task {
      * Set the ID of the task.
      * @param id The ID to set.
      */
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

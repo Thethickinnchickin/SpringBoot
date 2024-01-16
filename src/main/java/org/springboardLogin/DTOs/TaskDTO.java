@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class TaskDTO {
 
+    private String id;
     private String title;
     private String description;
     private Date dueDate;
@@ -14,11 +15,12 @@ public class TaskDTO {
         // Default constructor
     }
 
-    public TaskDTO(String title, String description, Date dueDate, String priority) {
+    public TaskDTO(String id,String title, String description, Date dueDate, String priority) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
+        this.id = id;
     }
 
     // Getters and Setters
@@ -29,6 +31,14 @@ public class TaskDTO {
      */
     public String getTitle() {
         return title;
+    }
+
+    /**
+     * Get the id of the task.
+     * @return The task id.
+     */
+    public String getId() {
+        return id;
     }
 
     /**

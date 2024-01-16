@@ -67,10 +67,12 @@ public class UserController {
 
     // Get a user by ID
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
-        AppUser user = userService.getUserFromId(id);
-        if (user != null) {
+    public ResponseEntity<UserDTO> getUser(@PathVariable String id) {
+        Optional<AppUser> optionalUser = userService.findByUserId(id);
+
+        if (optionalUser.isPresent()) {
             // Convert AppUser to UserDTO
+            AppUser user = optionalUser.get();
             UserDTO userDTO = new UserDTO(user.getId(), user.getUsername());
             return ResponseEntity.ok(userDTO);
         } else {
@@ -78,4 +80,5 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
 }

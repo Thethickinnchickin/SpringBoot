@@ -5,9 +5,11 @@ import org.springboardLogin.Entities.Task;
 import org.springboardLogin.Repositories.TaskRepository;
 import org.springboardLogin.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +36,7 @@ public class TaskService {
     }
 
     // Get a task by ID for the authenticated user
-    public Optional<Task> getTaskById(Long id) {
+    public Optional<Task> getTaskById(String id) {
         // Check if the task belongs to the authenticated user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<AppUser> authenticatedUser = userRepository.findByUsername(username);
@@ -57,18 +59,41 @@ public class TaskService {
         // Set the authenticated user as the owner of the task
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<AppUser> authenticatedUser = userRepository.findByUsername(username);
-
+        System.out.println(username);
         if (authenticatedUser.isPresent()) {
-            AppUser user = authenticatedUser.get();
+            AppUser user = userRepository
+                    .findById(authenticatedUser.get().getId()).orElse(null);
+            assert user != null;
+            System.out.println(user.getId());
             task.setUser(user);
+            System.out.println(task.getTitle());
+            List<Task> tasks;
+            try {
+                if (user.getTasks() != null) {
+                    tasks = user.getTasks();
+                    tasks.add(task);
+                    System.out.println("Task Added");
+                } else {
+                    tasks = new ArrayList<>();
+                    tasks.add(task);
+                    System.out.println("Tasks Added");
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
 
             try {
                 // Save the task to the database
                 taskRepository.save(task);
+                userRepository.save(user);
+            } catch (DataAccessException e) {
+                // Handle the specific exception, e.g., DuplicateKeyException or other database-related errors
+                System.out.print("Database error: " + e.getMessage());
             } catch (Exception e) {
-                // Handle the exception or print the stack trace for debugging
-                System.out.print("ERRORRRR");
+                // Handle other exceptions or print the stack trace for debugging
+                System.out.print("Error: " + e.getMessage());
             }
+
         }
     }
 
@@ -106,7 +131,7 @@ public class TaskService {
     }
 
     // Delete a task for the authenticated user
-    public void deleteTask(Long id) {
+    public void deleteTask(String id) {
         // Check if the task belongs to the authenticated user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<AppUser> authenticatedUser = userRepository.findByUsername(username);

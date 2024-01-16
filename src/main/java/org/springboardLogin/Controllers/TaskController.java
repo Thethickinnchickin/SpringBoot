@@ -28,6 +28,7 @@ public class TaskController {
         for (Task task : tasks) {
             // Convert each Task to TaskDTO
             TaskDTO taskDTO = new TaskDTO(
+                    task.getId(),
                     task.getTitle(),
                     task.getDescription(),
                     task.getDueDate(),
@@ -41,7 +42,7 @@ public class TaskController {
 
     // Retrieve a specific task by ID
     @GetMapping("/{id}")
-    public Task getTaskById(@PathVariable Long id) {
+    public Task getTaskById(@PathVariable String id) {
         return taskService.getTaskById(id).orElse(null);
     }
 
@@ -50,17 +51,17 @@ public class TaskController {
     public ResponseEntity<?> createTask(@RequestBody Task task) {
         try {
             // Try creating the task
+            System.out.println("Creating Task");
             taskService.createTask(task);
             return ResponseEntity.ok("Task Created");
         } catch (Exception e) {
-            e.printStackTrace(); // Print the stack trace for debugging
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
     // Update an existing task
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable String id, @RequestBody TaskDTO taskDTO) {
         // Fetch the existing task by ID
         Optional<Task> existingTaskOptional = taskService.getTaskById(id);
 
@@ -78,6 +79,7 @@ public class TaskController {
 
             // Convert the updated task to TaskDTO
             TaskDTO updatedTaskDTO = new TaskDTO(
+                    updatedTask.getId(),
                     updatedTask.getTitle(),
                     updatedTask.getDescription(),
                     updatedTask.getDueDate(),
@@ -93,7 +95,7 @@ public class TaskController {
 
     // Delete a task by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTask(@PathVariable Long id) {
+    public ResponseEntity<?> deleteTask(@PathVariable String id) {
         taskService.deleteTask(id);
         return ResponseEntity.ok("Task Deleted");
     }

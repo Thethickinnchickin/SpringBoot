@@ -38,7 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // Example: Create authorities based on user roles
         List<GrantedAuthority> authorities = user.getRoles()
                 .stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                 .collect(Collectors.toList());
 
         // Create UserDetails with username, encoded password, and authorities

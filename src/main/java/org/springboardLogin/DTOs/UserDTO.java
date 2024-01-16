@@ -2,7 +2,7 @@ package org.springboardLogin.DTOs;
 
 public class UserDTO {
 
-    private Long id;
+    private String id;
     private String username;
 
     // Constructors
@@ -10,7 +10,7 @@ public class UserDTO {
         // Default constructor
     }
 
-    public UserDTO(Long id, String username) {
+    public UserDTO(String id, String username) {
         this.id = id;
         this.username = username;
     }
@@ -21,7 +21,7 @@ public class UserDTO {
      * Get the user ID.
      * @return The user ID.
      */
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -29,7 +29,7 @@ public class UserDTO {
      * Set the user ID.
      * @param id The user ID to set.
      */
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
