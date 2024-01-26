@@ -10,18 +10,27 @@ public class TaskDTO {
     private Date dueDate;
     private String priority;
 
+    private Boolean isCompleted = false;
+
     // Constructors
     public TaskDTO() {
         // Default constructor
+
     }
 
-    public TaskDTO(String id,String title, String description, Date dueDate, String priority) {
+    public TaskDTO(String id, String title, String description, Date dueDate, String priority, boolean isCompleted) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
-        this.id = id;
+        this.isCompleted = isCompleted;
     }
+
+    // Constructor with optional isCompleted parameter set to false
+//    public TaskDTO(String id, String title, String description, Date dueDate, String priority) {
+//        this(id, title, description, dueDate, priority, false);
+//    }
 
     // Getters and Setters
 
@@ -96,4 +105,8 @@ public class TaskDTO {
     public void setPriority(String priority) {
         this.priority = priority;
     }
+
+    public Boolean getIsCompleted() { return this.isCompleted; }
+
+    public void setIsCompleted(Boolean isCompleted) { this.isCompleted = isCompleted; }
 }

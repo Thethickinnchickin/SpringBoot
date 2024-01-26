@@ -1,5 +1,7 @@
 package org.springboardLogin.Controllers;
 
+import org.springboardLogin.DTOs.LoginResponseDTO;
+import org.springboardLogin.DTOs.ResponseDTO;
 import org.springboardLogin.DTOs.UserDTO;
 import org.springboardLogin.Entities.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,24 +38,28 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody AppUser user) {
         userService.registerUser(user);
-        return ResponseEntity.ok("User registered successfully");
+        ResponseDTO responseDTO = new ResponseDTO("User registered successfully");
+        return ResponseEntity.ok(responseDTO);
     }
 
     // Authenticate and generate JWT token for login
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody AppUser user) {
         try {
+            user.getPassword();
+            user.getUsername();
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
             String token = jwtTokenProvider.generateToken(userDetails);
-            return ResponseEntity.ok(token);
+            LoginResponseDTO loginResponse = new LoginResponseDTO(token);
+            return ResponseEntity.ok(loginResponse);
         } catch (AuthenticationException e) {
             // Handle authentication failure
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }

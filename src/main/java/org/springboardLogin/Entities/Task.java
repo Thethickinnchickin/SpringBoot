@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
+import javax.persistence.Column;
 import java.util.Date;
 
 @Document(collection = "tasks")
@@ -18,6 +19,9 @@ public class Task {
     private String priority;
 
 
+    private Boolean isCompleted = false;
+
+
     private AppUser user;
 
     // Constructors
@@ -27,6 +31,7 @@ public class Task {
      */
     public Task() {
         // Default constructor
+        this.isCompleted = false; // Set default value
     }
 
     /**
@@ -41,6 +46,7 @@ public class Task {
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
+        this.isCompleted = false;
     }
 
     // Getters and Setters
@@ -140,4 +146,8 @@ public class Task {
     public void setUser(AppUser user) {
         this.user = user;
     }
+
+    public Boolean getIsCompleted() { return this.isCompleted; }
+
+    public void setIsCompleted(Boolean isCompleted) { this.isCompleted = isCompleted; }
 }

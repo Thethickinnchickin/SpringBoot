@@ -1,9 +1,11 @@
 package org.springboardLogin.Services;
 
+import org.springboardLogin.DTOs.TaskDTO;
 import org.springboardLogin.Entities.AppUser;
 import org.springboardLogin.Entities.Task;
 import org.springboardLogin.Repositories.TaskRepository;
 import org.springboardLogin.Repositories.UserRepository;
+import org.springboardLogin.Security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,11 +24,15 @@ public class TaskService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     // Get all tasks for the authenticated user
-    public List<Task> getAllTasks() {
+    public List<Task> getAllTasks(String token) {
         // Get the authenticated user
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<AppUser> authenticatedUser = userRepository.findByUsername(username);
+        String newUser = jwtTokenProvider.getUsernameFromToken(token);
+        Optional<AppUser> authenticatedUser = userRepository.findByUsername(newUser);
+
 
         if (authenticatedUser.isPresent()) {
             // Fetch tasks for the authenticated user
@@ -36,10 +42,11 @@ public class TaskService {
     }
 
     // Get a task by ID for the authenticated user
-    public Optional<Task> getTaskById(String id) {
+    public Optional<Task> getTaskById(String id, String token) {
         // Check if the task belongs to the authenticated user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<AppUser> authenticatedUser = userRepository.findByUsername(username);
+        String newUser = jwtTokenProvider.getUsernameFromToken(token);
+        Optional<AppUser> authenticatedUser = userRepository.findByUsername(newUser);
 
         if (authenticatedUser.isPresent()) {
             AppUser user = authenticatedUser.get();
@@ -55,27 +62,30 @@ public class TaskService {
     }
 
     // Create a task for the authenticated user
-    public void createTask(Task task) {
+    public void createTask(TaskDTO task, String token) {
         // Set the authenticated user as the owner of the task
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<AppUser> authenticatedUser = userRepository.findByUsername(username);
-        System.out.println(username);
+        String newUser = jwtTokenProvider.getUsernameFromToken(token);
+        Optional<AppUser> authenticatedUser = userRepository.findByUsername(newUser);
         if (authenticatedUser.isPresent()) {
             AppUser user = userRepository
                     .findById(authenticatedUser.get().getId()).orElse(null);
             assert user != null;
-            System.out.println(user.getId());
-            task.setUser(user);
+            Task newTask = new Task();
+            newTask.setUser(user);
+            newTask.setDueDate(task.getDueDate());
+            newTask.setDescription(task.getDescription());
+            newTask.setTitle(task.getTitle());
+            newTask.setPriority(task.getPriority());
             System.out.println(task.getTitle());
             List<Task> tasks;
             try {
                 if (user.getTasks() != null) {
                     tasks = user.getTasks();
-                    tasks.add(task);
+                    tasks.add(newTask);
                     System.out.println("Task Added");
                 } else {
                     tasks = new ArrayList<>();
-                    tasks.add(task);
+                    tasks.add(newTask);
                     System.out.println("Tasks Added");
                 }
             } catch (Exception e) {
@@ -84,7 +94,7 @@ public class TaskService {
 
             try {
                 // Save the task to the database
-                taskRepository.save(task);
+                taskRepository.save(newTask);
                 userRepository.save(user);
             } catch (DataAccessException e) {
                 // Handle the specific exception, e.g., DuplicateKeyException or other database-related errors
@@ -98,10 +108,10 @@ public class TaskService {
     }
 
     // Update a task for the authenticated user
-    public Task updateTask(Task task) {
+    public Task updateTask(Task task, String token) {
         // Check if the task belongs to the authenticated user
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<AppUser> authenticatedUser = userRepository.findByUsername(username);
+        String newUser = jwtTokenProvider.getUsernameFromToken(token);
+        Optional<AppUser> authenticatedUser = userRepository.findByUsername(newUser);
 
         if (authenticatedUser.isPresent()) {
             if (!task.getUser().getId().equals(authenticatedUser.get().getId())) {
@@ -121,6 +131,7 @@ public class TaskService {
             existingTask.setDescription(task.getDescription());
             existingTask.setDueDate(task.getDueDate());
             existingTask.setPriority(task.getPriority());
+            existingTask.setIsCompleted(task.getIsCompleted());
 
             // Save the updated task
             return taskRepository.save(existingTask);
@@ -131,10 +142,10 @@ public class TaskService {
     }
 
     // Delete a task for the authenticated user
-    public void deleteTask(String id) {
+    public void deleteTask(String id, String token) {
         // Check if the task belongs to the authenticated user
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<AppUser> authenticatedUser = userRepository.findByUsername(username);
+        String newUser = jwtTokenProvider.getUsernameFromToken(token);
+        Optional<AppUser> authenticatedUser = userRepository.findByUsername(newUser);
 
         if (authenticatedUser.isPresent()) {
             Task taskToDelete = taskRepository.findById(id)

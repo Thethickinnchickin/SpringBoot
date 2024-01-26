@@ -47,15 +47,21 @@ public class JwtTokenProvider {
     }
 
     // Extract username from the JWT token
+    // Extract username from the JWT token
     public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(jwtSecret)
+                    .parseClaimsJws(token)
+                    .getBody();
 
-        return claims.getSubject();
+            return claims.getSubject();
+        } catch (ExpiredJwtException ex) {
+            // Token has expired
+            // You can log this event or perform any necessary actions
+            return null;
+        }
     }
-
     // Validate the JWT token
     public boolean validateToken(String authToken) {
         try {

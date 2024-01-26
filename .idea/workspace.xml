@@ -4,29 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fa192c63-7ea9-4f98-996b-387549a74d8c" name="Changes" comment="organization">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Controllers/AdminController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Entities/UserRole.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Repositories/IMongoConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Repositories/MongoConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="fa192c63-7ea9-4f98-996b-387549a74d8c" name="Changes" comment="version .1">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/DTOs/LoginResponseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/DTOs/ResponseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Security/CorsConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Controllers/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Controllers/TaskController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Controllers/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/DTOs/TaskDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/DTOs/TaskDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/DTOs/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/DTOs/UserDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Entities/AppUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Entities/AppUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Entities/Role.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Entities/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Entities/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Repositories/TaskRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Repositories/TaskRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Repositories/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Security/JwtTokenInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Security/JwtTokenInterceptor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Security/JwtTokenProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Security/JwtTokenProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Security/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Services/TaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Services/TaskService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Services/UserDetailsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Services/UserDetailsServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/springboardLogin/Services/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,8 +32,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -121,7 +111,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705302891098</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="version .1">
+      <option name="closed" value="true" />
+      <created>1705437918058</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1705437918058</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -138,6 +136,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
     <MESSAGE value="organization" />
-    <option name="LAST_COMMIT_MESSAGE" value="organization" />
+    <MESSAGE value="version .1" />
+    <option name="LAST_COMMIT_MESSAGE" value="version .1" />
   </component>
 </project>
