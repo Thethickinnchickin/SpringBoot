@@ -2,6 +2,7 @@ package org.springboardLogin.Security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,10 +11,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
 
+/**
+ * Component class responsible for JWT token generation, validation, and extraction.
+ */
 @Component
 public class JwtTokenProvider {
 
@@ -33,7 +36,12 @@ public class JwtTokenProvider {
         this.jwtSecretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    // Generate a JWT token for the given UserDetails
+    /**
+     * Generates a JWT token for the given UserDetails.
+     *
+     * @param userDetails UserDetails object for which the token is generated.
+     * @return JWT token as a string.
+     */
     public String generateToken(UserDetails userDetails) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
@@ -46,8 +54,12 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // Extract username from the JWT token
-    // Extract username from the JWT token
+    /**
+     * Extracts the username from the JWT token.
+     *
+     * @param token JWT token as a string.
+     * @return Username extracted from the token.
+     */
     public String getUsernameFromToken(String token) {
         try {
             Claims claims = Jwts.parser()
@@ -62,7 +74,13 @@ public class JwtTokenProvider {
             return null;
         }
     }
-    // Validate the JWT token
+
+    /**
+     * Validates the JWT token.
+     *
+     * @param authToken JWT token as a string.
+     * @return True if the token is valid, false otherwise.
+     */
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
@@ -81,14 +99,24 @@ public class JwtTokenProvider {
         return false;
     }
 
-    // Get Authentication object for the user based on the JWT token
+    /**
+     * Gets the Authentication object for the user based on the JWT token.
+     *
+     * @param token JWT token as a string.
+     * @return Authentication object.
+     */
     public Authentication getAuthentication(String token) {
         String username = getUsernameFromToken(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    // Extract JWT token from the request headers
+    /**
+     * Extracts the JWT token from the request headers.
+     *
+     * @param request HttpServletRequest object.
+     * @return JWT token as a string or null if not found.
+     */
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {

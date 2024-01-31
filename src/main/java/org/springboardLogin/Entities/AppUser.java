@@ -1,18 +1,19 @@
 package org.springboardLogin.Entities;
 
-import com.fasterxml.jackson.annotation.*;
-import org.springframework.data.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 import java.util.*;
 
+/**
+ * Entity class representing a user in the application.
+ */
 @Document(collection = "users")
 public class AppUser implements UserDetails {
-
 
     @Id
     private String id;
@@ -44,6 +45,7 @@ public class AppUser implements UserDetails {
 
     /**
      * Get the user ID.
+     *
      * @return The user ID.
      */
     public String getId() {
@@ -52,6 +54,7 @@ public class AppUser implements UserDetails {
 
     /**
      * Set the user ID.
+     *
      * @param id The user ID to set.
      */
     public void setId(String id) {
@@ -60,6 +63,7 @@ public class AppUser implements UserDetails {
 
     /**
      * Get the username.
+     *
      * @return The username.
      */
     public String getUsername() {
@@ -68,6 +72,7 @@ public class AppUser implements UserDetails {
 
     /**
      * Set the username.
+     *
      * @param username The username to set.
      */
     public void setUsername(String username) {
@@ -78,31 +83,36 @@ public class AppUser implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;  // You may customize this based on your requirements
+        return true;  // You may customize this based on your requirements
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;  // You may customize this based on your requirements
+        return true;  // You may customize this based on your requirements
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;  // You may customize this based on your requirements
+        return true;  // You may customize this based on your requirements
     }
 
     @Override
     public boolean isEnabled() {
-        return false;  // You may customize this based on your requirements
+        return true;  // You may customize this based on your requirements
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;  // You may customize this based on your requirements
+        // You may implement this method to provide authorities based on user roles
+//        return roles.stream()
+//                .map(role -> (GrantedAuthority) () -> "ROLE_" + role.name())
+//                .collect(Collectors.toList());
+        return null;
     }
 
     /**
      * Get the password.
+     *
      * @return The password.
      */
     public String getPassword() {
@@ -111,6 +121,7 @@ public class AppUser implements UserDetails {
 
     /**
      * Set the password.
+     *
      * @param password The password to set.
      */
     public void setPassword(String password) {
@@ -119,6 +130,7 @@ public class AppUser implements UserDetails {
 
     /**
      * Get the list of tasks associated with the user.
+     *
      * @return The list of tasks.
      */
     public List<Task> getTasks() {
@@ -127,19 +139,24 @@ public class AppUser implements UserDetails {
 
     /**
      * Set the list of tasks associated with the user.
+     *
      * @param tasks The list of tasks to set.
      */
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
 
+    /**
+     * Add a task to the list of tasks associated with the user.
+     *
+     * @param task The task to add.
+     */
     public void addTask(Task task) {
         if (this.tasks == null) {
             this.tasks = new ArrayList<>();
         }
         this.tasks.add(task);
     }
-
 
     // Equals and HashCode (based on unique field)
 
@@ -158,6 +175,7 @@ public class AppUser implements UserDetails {
 
     /**
      * Get the set of roles associated with the user.
+     *
      * @return The set of roles.
      */
     public Set<UserRole> getRoles() {
@@ -166,6 +184,7 @@ public class AppUser implements UserDetails {
 
     /**
      * Set the set of roles associated with the user.
+     *
      * @param roles The set of roles to set.
      */
     public void setRoles(Set<UserRole> roles) {

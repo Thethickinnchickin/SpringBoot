@@ -3,10 +3,11 @@ package org.springboardLogin.Entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-
 import java.util.Date;
 
+/**
+ * Entity class representing a task in the application.
+ */
 @Document(collection = "tasks")
 public class Task {
 
@@ -18,9 +19,7 @@ public class Task {
     private Date dueDate;
     private String priority;
 
-
     private Boolean isCompleted = false;
-
 
     private AppUser user;
 
@@ -36,6 +35,7 @@ public class Task {
 
     /**
      * Constructor for Task with title, description, due date, and priority.
+     *
      * @param title       The title of the task.
      * @param description The description of the task.
      * @param dueDate     The due date of the task.
@@ -53,6 +53,7 @@ public class Task {
 
     /**
      * Get the ID of the task.
+     *
      * @return The ID.
      */
     public String getId() {
@@ -61,6 +62,7 @@ public class Task {
 
     /**
      * Set the ID of the task.
+     *
      * @param id The ID to set.
      */
     public void setId(String id) {
@@ -69,6 +71,7 @@ public class Task {
 
     /**
      * Get the title of the task.
+     *
      * @return The title.
      */
     public String getTitle() {
@@ -77,6 +80,7 @@ public class Task {
 
     /**
      * Set the title of the task.
+     *
      * @param title The title to set.
      */
     public void setTitle(String title) {
@@ -85,6 +89,7 @@ public class Task {
 
     /**
      * Get the description of the task.
+     *
      * @return The description.
      */
     public String getDescription() {
@@ -93,6 +98,7 @@ public class Task {
 
     /**
      * Set the description of the task.
+     *
      * @param description The description to set.
      */
     public void setDescription(String description) {
@@ -101,6 +107,7 @@ public class Task {
 
     /**
      * Get the due date of the task.
+     *
      * @return The due date.
      */
     public Date getDueDate() {
@@ -109,6 +116,7 @@ public class Task {
 
     /**
      * Set the due date of the task.
+     *
      * @param dueDate The due date to set.
      */
     public void setDueDate(Date dueDate) {
@@ -117,6 +125,7 @@ public class Task {
 
     /**
      * Get the priority of the task.
+     *
      * @return The priority.
      */
     public String getPriority() {
@@ -125,6 +134,7 @@ public class Task {
 
     /**
      * Set the priority of the task.
+     *
      * @param priority The priority to set.
      */
     public void setPriority(String priority) {
@@ -133,6 +143,7 @@ public class Task {
 
     /**
      * Get the user associated with the task.
+     *
      * @return The user.
      */
     public AppUser getUser() {
@@ -141,13 +152,28 @@ public class Task {
 
     /**
      * Set the user associated with the task.
+     *
      * @param user The user to set.
      */
     public void setUser(AppUser user) {
         this.user = user;
     }
 
-    public Boolean getIsCompleted() { return this.isCompleted; }
+    /**
+     * Get the completion status of the task.
+     *
+     * @return The completion status.
+     */
+    public Boolean getIsCompleted() {
+        return this.isCompleted;
+    }
 
-    public void setIsCompleted(Boolean isCompleted) { this.isCompleted = isCompleted; }
+    /**
+     * Set the completion status of the task.
+     *
+     * @param isCompleted The completion status to set.
+     */
+    public void setIsCompleted(Boolean isCompleted) {
+        this.isCompleted = isCompleted;
+    }
 }

@@ -2,13 +2,19 @@ package org.springboardLogin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-//import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+/**
+ * The main class to start the Spring Boot application.
+ * This class contains the main method to run the Spring Boot application.
+ */
 @SpringBootApplication
-//@EnableMongoRepositories(basePackages = "org.springboardLogin.Repositories")
 public class Main {
 
-    // Main class to start the Spring Boot application
+    /**
+     * The main method that starts the Spring Boot application.
+     *
+     * @param args Command line arguments passed to the application.
+     */
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }

@@ -5,6 +5,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * Custom implementation of the UserDetails interface to represent user details.
+ * This class is used for authentication and authorization in Spring Security.
+ */
 public class UserDetailsEntity implements UserDetails {
 
     private String username;
@@ -15,6 +19,7 @@ public class UserDetailsEntity implements UserDetails {
 
     /**
      * Get the username of the user.
+     *
      * @return The username.
      */
     @Override
@@ -24,6 +29,7 @@ public class UserDetailsEntity implements UserDetails {
 
     /**
      * Get the password of the user.
+     *
      * @return The password.
      */
     @Override
@@ -33,6 +39,7 @@ public class UserDetailsEntity implements UserDetails {
 
     /**
      * Set the username of the user.
+     *
      * @param username The username to set.
      */
     public void setUsername(String username) {
@@ -41,6 +48,7 @@ public class UserDetailsEntity implements UserDetails {
 
     /**
      * Set the password of the user.
+     *
      * @param password The password to set.
      */
     public void setPassword(String password) {
@@ -49,6 +57,7 @@ public class UserDetailsEntity implements UserDetails {
 
     /**
      * Get the authorities (roles) assigned to the user.
+     *
      * @return The authorities.
      */
     @Override
@@ -58,6 +67,7 @@ public class UserDetailsEntity implements UserDetails {
 
     /**
      * Set the authorities (roles) for the user.
+     *
      * @param authorities The authorities to set.
      */
     public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
@@ -68,6 +78,7 @@ public class UserDetailsEntity implements UserDetails {
 
     /**
      * Check if the user account is non-expired.
+     *
      * @return true if the account is non-expired.
      */
     @Override
@@ -77,6 +88,7 @@ public class UserDetailsEntity implements UserDetails {
 
     /**
      * Check if the user account is non-locked.
+     *
      * @return true if the account is non-locked.
      */
     @Override
@@ -86,6 +98,7 @@ public class UserDetailsEntity implements UserDetails {
 
     /**
      * Check if the user credentials are non-expired.
+     *
      * @return true if the credentials are non-expired.
      */
     @Override
@@ -95,6 +108,7 @@ public class UserDetailsEntity implements UserDetails {
 
     /**
      * Check if the user account is enabled.
+     *
      * @return true if the account is enabled.
      */
     @Override

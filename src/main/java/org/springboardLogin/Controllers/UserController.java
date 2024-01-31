@@ -4,19 +4,13 @@ import org.springboardLogin.DTOs.LoginResponseDTO;
 import org.springboardLogin.DTOs.ResponseDTO;
 import org.springboardLogin.DTOs.UserDTO;
 import org.springboardLogin.Entities.AppUser;
+import org.springboardLogin.Security.JwtTokenProvider;
+import org.springboardLogin.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import org.springboardLogin.Security.JwtTokenProvider;
-import org.springboardLogin.Services.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,9 +18,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/auth")
 public class UserController {
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -37,6 +28,8 @@ public class UserController {
     // Register a new user
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody AppUser user) {
+        // Log information about registering a new user
+        System.out.println("Registering User");
         userService.registerUser(user);
         ResponseDTO responseDTO = new ResponseDTO("User registered successfully");
         return ResponseEntity.ok(responseDTO);
@@ -46,17 +39,18 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody AppUser user) {
         try {
-            user.getPassword();
-            user.getUsername();
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            Optional<AppUser> newUser = userService.userLogin(user);
 
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-            String token = jwtTokenProvider.generateToken(userDetails);
-            LoginResponseDTO loginResponse = new LoginResponseDTO(token);
-            return ResponseEntity.ok(loginResponse);
+            if (newUser.isPresent()) {
+                // User authentication successful, generate JWT token
+                AppUser foundUser = newUser.get();
+                String token = jwtTokenProvider.generateToken(foundUser);
+                LoginResponseDTO loginResponse = new LoginResponseDTO(token);
+                return ResponseEntity.ok(loginResponse);
+            } else {
+                // Unable to log in
+                return ResponseEntity.ok("Unable To Login");
+            }
         } catch (AuthenticationException e) {
             // Handle authentication failure
             System.out.println(e.getMessage());
@@ -67,6 +61,8 @@ public class UserController {
     // Get all users
     @GetMapping("/users")
     public ResponseEntity<List<AppUser>> getUsers() {
+        // Log information about retrieving all users
+        System.out.println("Retrieving all users");
         List<AppUser> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
@@ -86,5 +82,4 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
 }

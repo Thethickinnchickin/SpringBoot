@@ -1,41 +1,41 @@
 package org.springboardLogin.Security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import static org.springframework.security.config.Customizer.withDefaults;
 
+/**
+ * Configuration class for security-related settings.
+ */
 @Configuration
-@EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    // Bean for password encoder to securely encode passwords
+    /**
+     * Configures the password encoder bean for password hashing.
+     *
+     * @return An instance of BCryptPasswordEncoder.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Bean for exposing AuthenticationManager as a bean
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
+    /**
+     * Configures and defines a CORS filter bean to handle Cross-Origin Resource Sharing.
+     *
+     * @return CorsFilter bean.
+     */
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -43,40 +43,45 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         config.addAllowedOrigin("*");
         config.addAllowedMethod("*");
         config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("POST");
         config.addAllowedHeader("*");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    /**
+     * Configures the security filter chain for various security settings.
+     *
+     * @param http HttpSecurity instance for configuring security settings.
+     * @return SecurityFilterChain instance.
+     * @throws Exception if an error occurs during configuration.
+     */
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // CSRF token configuration
+        CookieCsrfTokenRepository tokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        XorCsrfTokenRequestAttributeHandler delegate = new XorCsrfTokenRequestAttributeHandler();
+        delegate.setCsrfRequestAttributeName("_csrf");
+        CsrfTokenRequestHandler requestHandler = delegate::handle;
 
-    // Configure the authentication manager with a user details service and password encoder
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    }
-
-    // Configure HTTP security for different endpoints and authentication
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                .antMatchers("/auth/register").permitAll()
-                .antMatchers("/auth/login").permitAll() // permit access to the registration endpoint
-                .antMatchers("/auth/users").permitAll()
-                .antMatchers("/auth/users/**").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/tasks").permitAll()
-                .antMatchers("/tasks/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .anyRequest().permitAll()
-                .and()
-                .formLogin().permitAll()
-                .and()
-                .logout().permitAll()
-                .and()
-                .csrf().disable();
-    }
+                .authorizeHttpRequests((authz) -> authz
+                        .requestMatchers("/auth/register").permitAll()
+                        .requestMatchers("/auth/login").permitAll() // permit access to the registration endpoint
+                        .requestMatchers("/auth/users").permitAll()
+                        .requestMatchers("/auth/users/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/tasks").permitAll()
+                        .requestMatchers("/tasks/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/csrf").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .csrf((csrf) -> csrf
+                        .disable()
+                )
+                .httpBasic(withDefaults());
 
+        return http.build();
+    }
 }

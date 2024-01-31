@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service class for handling task-related operations.
+ */
 @Service
 public class TaskService {
 
@@ -27,12 +30,16 @@ public class TaskService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    // Get all tasks for the authenticated user
+    /**
+     * Get all tasks for the authenticated user.
+     *
+     * @param token JWT token for authentication.
+     * @return List of tasks for the authenticated user.
+     */
     public List<Task> getAllTasks(String token) {
         // Get the authenticated user
         String newUser = jwtTokenProvider.getUsernameFromToken(token);
         Optional<AppUser> authenticatedUser = userRepository.findByUsername(newUser);
-
 
         if (authenticatedUser.isPresent()) {
             // Fetch tasks for the authenticated user
@@ -41,7 +48,13 @@ public class TaskService {
         return null;
     }
 
-    // Get a task by ID for the authenticated user
+    /**
+     * Get a task by ID for the authenticated user.
+     *
+     * @param id    The ID of the task to retrieve.
+     * @param token JWT token for authentication.
+     * @return Optional containing the task if found and belongs to the authenticated user, empty otherwise.
+     */
     public Optional<Task> getTaskById(String id, String token) {
         // Check if the task belongs to the authenticated user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -61,14 +74,19 @@ public class TaskService {
         return Optional.empty();
     }
 
-    // Create a task for the authenticated user
+    /**
+     * Create a task for the authenticated user.
+     *
+     * @param task  TaskDTO containing task details.
+     * @param token JWT token for authentication.
+     */
     public void createTask(TaskDTO task, String token) {
         // Set the authenticated user as the owner of the task
         String newUser = jwtTokenProvider.getUsernameFromToken(token);
         Optional<AppUser> authenticatedUser = userRepository.findByUsername(newUser);
+
         if (authenticatedUser.isPresent()) {
-            AppUser user = userRepository
-                    .findById(authenticatedUser.get().getId()).orElse(null);
+            AppUser user = userRepository.findById(authenticatedUser.get().getId()).orElse(null);
             assert user != null;
             Task newTask = new Task();
             newTask.setUser(user);
@@ -76,7 +94,7 @@ public class TaskService {
             newTask.setDescription(task.getDescription());
             newTask.setTitle(task.getTitle());
             newTask.setPriority(task.getPriority());
-            System.out.println(task.getTitle());
+
             List<Task> tasks;
             try {
                 if (user.getTasks() != null) {
@@ -103,11 +121,16 @@ public class TaskService {
                 // Handle other exceptions or print the stack trace for debugging
                 System.out.print("Error: " + e.getMessage());
             }
-
         }
     }
 
-    // Update a task for the authenticated user
+    /**
+     * Update a task for the authenticated user.
+     *
+     * @param task  Updated task details.
+     * @param token JWT token for authentication.
+     * @return Updated Task.
+     */
     public Task updateTask(Task task, String token) {
         // Check if the task belongs to the authenticated user
         String newUser = jwtTokenProvider.getUsernameFromToken(token);
@@ -141,7 +164,12 @@ public class TaskService {
         }
     }
 
-    // Delete a task for the authenticated user
+    /**
+     * Delete a task for the authenticated user.
+     *
+     * @param id    The ID of the task to delete.
+     * @param token JWT token for authentication.
+     */
     public void deleteTask(String id, String token) {
         // Check if the task belongs to the authenticated user
         String newUser = jwtTokenProvider.getUsernameFromToken(token);

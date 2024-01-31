@@ -1,7 +1,6 @@
 package org.springboardLogin.Services;
 
 import org.springboardLogin.Entities.AppUser;
-import org.springboardLogin.Entities.UserDetailsEntity;
 import org.springboardLogin.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,18 +10,26 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for loading user details during authentication.
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
 
-    // Load user details by username for authentication
+    /**
+     * Load user details by username for authentication.
+     *
+     * @param username The username for which user details are loaded.
+     * @return UserDetails containing username, encoded password, and authorities.
+     * @throws UsernameNotFoundException Thrown if the user is not found.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // Retrieve user from the repository by username
